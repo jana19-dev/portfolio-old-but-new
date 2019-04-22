@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  frontend:
+    build: .
+    image: portfolio
+    container_name: frontend
+    working_dir: /app
+    volumes:
+      - ./frontend/:/app
+    user: 1000:1000
+    command: sh -c "yarn && yarn start"
+    network_mode: host
+    env_file:
+      - .env
+
+  backend:
+    build: .
+    image: portfolio
+    container_name: backend
+    working_dir: /app
+    volumes:
+      - ./backend/:/app
+    command: sh -c "yarn && yarn start"
+    network_mode: host
+    env_file:
+      - .env
