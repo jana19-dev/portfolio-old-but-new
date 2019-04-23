@@ -1,53 +1,32 @@
-/**
- * Layout component that queries for data
- * with Gatsby's StaticQuery component
- *
- * See: https://www.gatsbyjs.org/docs/static-query/
- */
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import React from "react"
-import PropTypes from "prop-types"
-import { StaticQuery, graphql } from "gatsby"
+import './styles.css'
+import './purple.css'
+import SEO from './seo'
+import Background from './background'
 
-import Header from "./header"
-import "./layout.css"
-
-const Layout = ({ children }) => (
-  <StaticQuery
-    query={graphql`
-      query SiteTitleQuery {
-        site {
-          siteMetadata {
-            title
-          }
-        }
-      }
-    `}
-    render={data => (
-      <>
-        <Header siteTitle={data.site.siteMetadata.title} />
-        <div
-          style={{
-            margin: `0 auto`,
-            maxWidth: 960,
-            padding: `0px 1.0875rem 1.45rem`,
-            paddingTop: 0,
-          }}
-        >
-          <main>{children}</main>
-          <footer>
-            © {new Date().getFullYear()}, Built with
-            {` `}
-            <a href="https://www.gatsbyjs.org">Gatsby</a>
-          </footer>
-        </div>
-      </>
-    )}
-  />
+const Layout = ({ children, title, activePage }) => (
+  <div className='page'>
+    <link href='https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i' rel='stylesheet' />
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.9/css/all.css' integrity='sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1' crossOrigin='anonymous' />
+    <SEO title={title} keywords={[`jana rajakumar`, `jana`, `jana19`, `developer`, `web developer`, `reactJS`]} />
+    <Background />
+    <div className='container opened' data-animation-in='fadeInLeft' data-animation-out='fadeOutLeft'>
+      {children}
+    </div>
+  </div>
 )
 
+Layout.defaultProps = {
+  title: 'Home',
+  activePage: '/'
+}
+
 Layout.propTypes = {
-  children: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired,
+  activePage: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired
 }
 
 export default Layout

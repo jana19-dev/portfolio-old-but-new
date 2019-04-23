@@ -1,32 +1,49 @@
-import React from "react"
-import { StaticQuery, graphql } from "gatsby"
-import Img from "gatsby-image"
+import React from 'react'
+import PropTypes from 'prop-types'
+import Img from 'gatsby-image'
+import { StaticQuery, graphql } from 'gatsby'
 
-/*
- * This component is built using `gatsby-image` to automatically serve optimized
- * images with lazy loading and reduced file sizes. The image is loaded using a
- * `StaticQuery`, which allows us to load the image from directly within this
- * component, rather than having to pass the image data down from pages.
- *
- * For more information, see the docs:
- * - `gatsby-image`: https://gatsby.dev/gatsby-image
- * - `StaticQuery`: https://gatsby.dev/staticquery
- */
+function renderImage (images, src, width) {
+  let file = images.edges.find(image => image.node.relativePath === src)
+  if (file) {
+    return <div style={{ width, margin: '0 auto' }}><Img fluid={file.node.childImageSharp.fluid} /></div>
+  } else {
+    file = images.edges.find(image => image.node.relativePath === 'unknown.jpg')
+    return <div style={{ width, margin: '0 auto' }}><Img fluid={file.node.childImageSharp.fluid} /></div>
+  }
+}
 
-const Image = () => (
-  <StaticQuery
+const Image = ({ src, width }) => {
+  return <StaticQuery
     query={graphql`
       query {
-        placeholderImage: file(relativePath: { eq: "gatsby-astronaut.png" }) {
-          childImageSharp {
-            fluid(maxWidth: 300) {
-              ...GatsbyImageSharpFluid
+        images: allFile(filter:{ extension: { regex: "/jpeg|jpg|png|gif/"}}) {
+          edges {
+            node {
+              extension
+              relativePath
+              childImageSharp {
+                fluid(maxWidth: 2000) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
             }
           }
         }
       }
     `}
-    render={data => <Img fluid={data.placeholderImage.childImageSharp.fluid} />}
+    render={({ images }) => renderImage(images, src, width)}
   />
-)
+}
+
+Image.defaultProps = {
+  src: `unknown.jpg`,
+  width: '100%'
+}
+
+Image.propTypes = {
+  src: PropTypes.string.isRequired,
+  width: PropTypes.string
+}
+
 export default Image
